@@ -40,5 +40,8 @@ Use scripts in examples/ to run shipper, indexer and web
 
 ## Next steps
 
+- have proper Logstash .deb
+    - upstart (logstash-server, logstash-agent)
+	-
 - run separate ElasticSearch
 - run receive, indexer and webfrontend in 1 process
