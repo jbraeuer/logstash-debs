@@ -1,0 +1,12 @@
+Source: grok
+Maintainer: Jens Braeuer <braeuer.jens@googlemail.com>
+Section: misc
+Priority: optional
+Standards-Version: 3.9.2
+Build-Depends: debhelper (>= 8), libtokyocabinet-dev, libevent-dev, gperf, libz-dev
+
+Package: grok
+Architecture: any
+Depends: ${misc:Depends}, ${shlibs:Depends}
+Description: Grok
+ Parsing library

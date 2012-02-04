@@ -1,0 +1,3 @@
+[submodule "upstream/grok"]
+	path = upstream/grok
+	url = git://github.com/jordansissel/grok.git
