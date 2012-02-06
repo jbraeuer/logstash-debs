@@ -9,7 +9,7 @@ clean() {
     rm -rf "$work"
 }
 
-get() {
+get_logstash() {
     log "Get source"
     mkdir -p "$download"
 
@@ -20,17 +20,6 @@ get() {
     file="logstash-1.1.0-monolithic.jar"
     url="http://semicomplete.com/files/logstash/logstash-1.1.0-monolithic.jar"
     [ -e "$file" ] || wget --output-document "$file" "$url"
-
-    #
-    # Fake a upstream tar.gz release by using git-archive on the git-checkout
-    # Dependency to grok.git is handled via git submodules
-    #
-    version=$(cat "$base/grok/grok_version.h" | grep GROK_VERSION | awk '{ print $6 }' | tr -d '";')
-    file="$download/grok_$version.orig.tar.gz"
-    if [ ! -e "$file" ]; then
-	cd "$upstream/grok"
-	git archive --format=tar --prefix="grok-$version/" HEAD | gzip > "$file"
-    fi
 }
 
 package_logstash() {
@@ -43,6 +32,21 @@ package_logstash() {
     fpm -s dir -t deb --name logstash --version 1.1.0 --depends 'openjdk-6-jdk' --depends "grok" -a all -C "$work/logstash" .
 }
 
+get_grok() {
+    log "Get source"
+    mkdir -p "$download"
+
+    #
+    # Fake a upstream tar.gz release by using git-archive on the git-checkout
+    # Dependency to grok.git is handled via git submodules
+    #
+    version=$(cat "$base/grok/grok_version.h" | grep GROK_VERSION | awk '{ print $6 }' | tr -d '";')
+    file="$download/grok_$version.orig.tar.gz"
+    if [ ! -e "$file" ]; then
+	cd "$upstream/grok"
+	git archive --format=tar --prefix="grok-$version/" HEAD | gzip > "$file"
+    fi
+}
 
 package_grok() {
     log "Package grok"
@@ -69,6 +73,9 @@ set -e
 set -x
 
 clean
-get
+
+get_logstash
 package_logstash
+
+get_grok
 package_grok
