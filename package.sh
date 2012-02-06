@@ -64,6 +64,28 @@ package_grok() {
     debuild -us -uc -F
 }
 
+package_statsd() {
+    log "Package statsd"
+    mkdir -p "$work"
+    cd "$work"
+
+    /var/lib/gems/1.9.1/bin/fpm -s gem -t deb -S 19 -v 0.12.10 eventmachine
+    /var/lib/gems/1.9.1/bin/fpm -s gem -t deb -S 19 -v 0.9.0 amq-protocol
+    /var/lib/gems/1.9.1/bin/fpm -s gem -t deb -S 19 -v 0.9.1 amq-client
+    /var/lib/gems/1.9.1/bin/fpm -s gem -t deb -S 19 -v 0.9.2 amqp
+    /var/lib/gems/1.9.1/bin/fpm -s gem -t deb -S 19 -v 0.5 petef-statsd
+}
+
+package_syslog_shipper() {
+    log "Package syslog-shipper"
+    mkdir -p "$work"
+    cd "$work"
+
+    /var/lib/gems/1.9.1/bin/fpm -s gem -t deb -S 19 -v 0.6.3 eventmachine-tail
+    /var/lib/gems/1.9.1/bin/fpm -s gem -t deb -S 19 -v 1.16.2 trollop
+    /var/lib/gems/1.9.1/bin/fpm -s gem -t deb -S 19 -v 1.1 syslog-shipper
+}
+
 base=$(dirname $(readlink -f "$0"))
 work="$base/work"
 download="$base/download"
@@ -79,3 +101,6 @@ package_logstash
 
 get_grok
 package_grok
+
+package_statsd
+package_syslog_shipper
