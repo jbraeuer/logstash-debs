@@ -38,6 +38,7 @@ package_ruby_logstash() {
     mkdir -p "$work"
     cp -r "$upstream/logstash" "$work/rubygem19-logstash"
     cd "$work/rubygem19-logstash"
+    cp "$base/logstash/"* .
     gem build logstash.gemspec
 
     cd "$work"
@@ -144,7 +145,7 @@ clean
 #package_logstash
 
 package_ruby_logstash
-package_ruby_logstash_deps
+#package_ruby_logstash_deps
 
 #get_grok
 #package_grok
