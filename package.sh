@@ -74,7 +74,8 @@ package_ruby_logstash_deps() {
     gem1.9.1 install --no-ri --no-rdoc --install-dir ./tmp/ --version 0.9.0 ffi-rzmq
     gem1.9.1 install --no-ri --no-rdoc --install-dir ./tmp/ ffi
 
-    find "./tmp/" -name '*.gem' | xargs -rn1 ruby1.9.1 /var/lib/gems/1.9.1/bin/fpm -s gem -t deb -S 19
+    cd "$work/"
+    find "./logstash-ruby-deps/tmp/" -name '*.gem' | xargs -rn1 ruby1.9.1 /var/lib/gems/1.9.1/bin/fpm -s gem -t deb -S 19
 }
 
 get_grok() {
@@ -141,14 +142,14 @@ set -x
 
 clean
 
-#get_logstash
-#package_logstash
+get_logstash
+package_logstash
 
 package_ruby_logstash
-#package_ruby_logstash_deps
+package_ruby_logstash_deps
 
-#get_grok
-#package_grok
+get_grok
+package_grok
 
-#package_statsd
+package_statsd
 #package_syslog_shipper
