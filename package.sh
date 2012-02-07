@@ -32,6 +32,50 @@ package_logstash() {
     fpm -s dir -t deb --name logstash --version 1.1.0 --depends 'openjdk-6-jdk' --depends "grok" -a all -C "$work/logstash" .
 }
 
+package_ruby_logstash() {
+    log "Package logstash ruby"
+
+    mkdir -p "$work"
+    cp -r "$upstream/logstash" "$work/rubygem19-logstash"
+    cd "$work/rubygem19-logstash"
+    gem build logstash.gemspec
+
+    cd "$work"
+    ruby1.9.1 /var/lib/gems/1.9.1/bin/fpm -s gem -t deb -S 19 rubygem19-logstash/logstash-1.1.0.gem
+}
+
+package_ruby_logstash_deps() {
+    log "Package logstash ruby deps"
+
+    mkdir -p "$work/logstash-ruby-deps/"
+    cd "$work/logstash-ruby-deps/"
+
+    gem1.9.1 install --no-ri --no-rdoc --install-dir ./tmp/ --version 0.1.7 cabin
+    gem1.9.1 install --no-ri --no-rdoc --install-dir ./tmp/ bunny
+    gem1.9.1 install --no-ri --no-rdoc --install-dir ./tmp/ uuidtools
+    gem1.9.1 install --no-ri --no-rdoc --install-dir ./tmp/ --version 0.3.2 filewatch
+    gem1.9.1 install --no-ri --no-rdoc --install-dir ./tmp/ --version 0.9.6 jls-grok
+    gem1.9.1 install --no-ri --no-rdoc --install-dir ./tmp/ stomp
+    gem1.9.1 install --no-ri --no-rdoc --install-dir ./tmp/ json
+    gem1.9.1 install --no-ri --no-rdoc --install-dir ./tmp/ awesome_print
+    gem1.9.1 install --no-ri --no-rdoc --install-dir ./tmp/ minitest
+    gem1.9.1 install --no-ri --no-rdoc --install-dir ./tmp/ rack
+    gem1.9.1 install --no-ri --no-rdoc --install-dir ./tmp/ sinatra
+    gem1.9.1 install --no-ri --no-rdoc --install-dir ./tmp/ haml
+    gem1.9.1 install --no-ri --no-rdoc --install-dir ./tmp/ sass
+    gem1.9.1 install --no-ri --no-rdoc --install-dir ./tmp/ mongo
+    gem1.9.1 install --no-ri --no-rdoc --install-dir ./tmp/ redis
+    gem1.9.1 install --no-ri --no-rdoc --install-dir ./tmp/ gelf
+    gem1.9.1 install --no-ri --no-rdoc --install-dir ./tmp/ --version 0.3.0 statsd-ruby
+    gem1.9.1 install --no-ri --no-rdoc --install-dir ./tmp/ --version 0.1.3 gmetric
+    gem1.9.1 install --no-ri --no-rdoc --install-dir ./tmp/ --version 0.5 xmpp4r
+    gem1.9.1 install --no-ri --no-rdoc --install-dir ./tmp/ --version 0.2.0 gelfd
+    gem1.9.1 install --no-ri --no-rdoc --install-dir ./tmp/ --version 0.9.0 ffi-rzmq
+    gem1.9.1 install --no-ri --no-rdoc --install-dir ./tmp/ ffi
+
+    find "./tmp/" -name '*.gem' | xargs -rn1 ruby1.9.1 /var/lib/gems/1.9.1/bin/fpm -s gem -t deb -S 19
+}
+
 get_grok() {
     log "Get source"
     mkdir -p "$download"
@@ -69,11 +113,11 @@ package_statsd() {
     mkdir -p "$work"
     cd "$work"
 
-    /var/lib/gems/1.9.1/bin/fpm -s gem -t deb -S 19 -v 0.12.10 eventmachine
-    /var/lib/gems/1.9.1/bin/fpm -s gem -t deb -S 19 -v 0.9.0 amq-protocol
-    /var/lib/gems/1.9.1/bin/fpm -s gem -t deb -S 19 -v 0.9.1 amq-client
-    /var/lib/gems/1.9.1/bin/fpm -s gem -t deb -S 19 -v 0.9.2 amqp
-    /var/lib/gems/1.9.1/bin/fpm -s gem -t deb -S 19 -v 0.5 petef-statsd
+    ruby1.9.1 /var/lib/gems/1.9.1/bin/fpm -s gem -t deb -S 19 -v 0.12.10 eventmachine
+    ruby1.9.1 /var/lib/gems/1.9.1/bin/fpm -s gem -t deb -S 19 -v 0.9.0 amq-protocol
+    ruby1.9.1 /var/lib/gems/1.9.1/bin/fpm -s gem -t deb -S 19 -v 0.9.1 amq-client
+    ruby1.9.1 /var/lib/gems/1.9.1/bin/fpm -s gem -t deb -S 19 -v 0.9.2 amqp
+    ruby1.9.1 /var/lib/gems/1.9.1/bin/fpm -s gem -t deb -S 19 -v 0.5 petef-statsd
 }
 
 package_syslog_shipper() {
@@ -81,9 +125,9 @@ package_syslog_shipper() {
     mkdir -p "$work"
     cd "$work"
 
-    /var/lib/gems/1.9.1/bin/fpm -s gem -t deb -S 19 -v 0.6.3 eventmachine-tail
-    /var/lib/gems/1.9.1/bin/fpm -s gem -t deb -S 19 -v 1.16.2 trollop
-    /var/lib/gems/1.9.1/bin/fpm -s gem -t deb -S 19 -v 1.1 syslog-shipper
+    ruby1.9.1 /var/lib/gems/1.9.1/bin/fpm -s gem -t deb -S 19 -v 0.6.3 eventmachine-tail
+    ruby1.9.1 /var/lib/gems/1.9.1/bin/fpm -s gem -t deb -S 19 -v 1.16.2 trollop
+    ruby1.9.1 /var/lib/gems/1.9.1/bin/fpm -s gem -t deb -S 19 -v 1.1 syslog-shipper
 }
 
 base=$(dirname $(readlink -f "$0"))
@@ -96,11 +140,14 @@ set -x
 
 clean
 
-get_logstash
-package_logstash
+#get_logstash
+#package_logstash
 
-get_grok
-package_grok
+package_ruby_logstash
+package_ruby_logstash_deps
 
-package_statsd
-package_syslog_shipper
+#get_grok
+#package_grok
+
+#package_statsd
+#package_syslog_shipper
