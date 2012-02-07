@@ -5,14 +5,11 @@ be installable by `apt-get` to make Puppet/Chef modules easy.
 
 # Packaged projects
 
-- logstash for jruby
-    - grok
-- logstash for ruby 1.9
-    - dependent ruby gems
+- grok
+- logstash monolithic
+- logstash as rubygems
 - fetep-statsd
-    - dependent ruby gems
-- syslog-shipper
-    - dependent ruby gems
+- required ruby gems
 
 # External dependencies
 
