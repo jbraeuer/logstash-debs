@@ -25,12 +25,11 @@ be installable by `apt-get` to make Puppet/Chef modules easy.
 
 # How to package
 
-- Checkout dependent projects in source (grok, logstash)
-    - `git submodule init`
-    - `git submodule update`
-- `./package.sh`
-    - it will download the logstash monolithic binary release
-    - comment out stuff you dont want to build (at the very bottom on the script)
+    git clone ...
+    git submodule init
+    git submodule update
+    ./package.sh
+
 - find the .debs in `./work`
 
 # Notes
