@@ -1,3 +1,6 @@
 [submodule "upstream/grok"]
 	path = upstream/grok
 	url = git://github.com/jordansissel/grok.git
+[submodule "upstream/logstash"]
+	path = upstream/logstash
+	url = git://github.com/logstash/logstash.git
